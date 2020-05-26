@@ -75,6 +75,9 @@ mVueRouter.install = function(_vue) {
           Vue.use()会调用这个install方法，将 _vue 实例传进来
       */
   _vue.mixin({
+    /* 
+      mixin 会在所有的组件在beforeCreate钩子中执行，
+    */
     beforeCreate() {
       //这里的代码将来会在初始化的时候被调用
       //将router挂载到prototype上
