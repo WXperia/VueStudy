@@ -8,16 +8,15 @@ let isObject = function (o) {
 class miniVue {
   constructor(options) {
     this.$options = options;
-
     //数距响应化
-
     this.$data = options.data;
-
     this.observe(this.$data);
-    new Watcher(this,'test');
-    this.test
-    new Watcher(this,'fool.bar')
-    this.fool.bar
+    // new Watcher(this,'test');
+    // this.test
+    // new Watcher(this,'fool.bar')
+    // this.fool.bar
+    new Compile(options.el,this);
+
   }
   observe(data) {
     if (!data || !isObject(data)) {
@@ -48,11 +47,14 @@ class miniVue {
     });
   }
   dataPoxy(key){
+    //   this[key] = this.$data[key]
+      //想了想，感觉有点问题，还是换了上面这种方法。
     Object.defineProperty(this,key,{
         get(){
             return this.$data[key]
         },
         set(newVal){
+          //触发在$data上各个属性的set属性
             this.$data[key] = newVal
         }
     })
@@ -73,13 +75,16 @@ class Dep {
 }
 
 class Watcher {
-  constructor(vm,key) {
+  constructor(vm,key,cb) {
       //创建实例时，立刻将该实例指向Dep.target
-    Dep.target = this;
     this.vm = vm
     this.key = key
+    this.cb = cb
+    Dep.target = this;
+    this.vm[this.key]
+    Dep.target = null;
   }
   upDate() {
-    console.log(this.key+`${this.vm}`);
+    this.cb.call(this.vm,this.vm[this.key])
   }
 }

@@ -7,22 +7,27 @@
 </head>
 <body>
     <div id="app">
-
+        aaa
+            <p>dsadas</p>
+            <p>{{test}}</p>
+            <p>{{fool}}</p>
     </div>
 </body>
+<script src="./compile.js"></script>
 <script src="./miniVue.js"></script>
 <script>
     
     const app = new miniVue({
+        el:'#app',
         data:{
             test:'in test',
-            fool: {
-                bar: 'bar'
-            }
+            fool: '2'
         }
+        
     })
-    app.$data.test = '123'
-    app.$data.fool.bar = 'bar222'
+    setTimeout(function(){
+        app.fool = 'bar222'
+    },2000)
     console.log(app.test)
 </script>
 </html>
