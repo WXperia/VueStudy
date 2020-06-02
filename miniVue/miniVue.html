@@ -7,10 +7,11 @@
 </head>
 <body>
     <div id="app">
-        aaa
             <p>dsadas</p>
             <p>{{test}}</p>
             <p>{{fool}}</p>
+            <p k-text="test"></p>
+            <p @click="showalert">{{fool}}</p>
     </div>
 </body>
 <script src="./compile.js"></script>
@@ -22,6 +23,12 @@
         data:{
             test:'in test',
             fool: '2'
+        },
+        methods:{
+            showalert(){
+                console.log('aaaaa')
+                
+            }
         }
         
     })

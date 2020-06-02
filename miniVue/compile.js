@@ -26,9 +26,10 @@ class Compile {
         // console.log(childNodes)
         Array.from(childNodes).forEach(node => {
             if (this.isElement(node)) {
-                if (node.childNodes && node.childNodes.length) {
+                if (node.childNodes && node.childNodes.length>0) {
                     this.compile(node)
                 }
+                this.compileAttr(node)
             } else if (this.isInterpolation(node)) {
                 this.compileText(node)
             }
@@ -36,8 +37,46 @@ class Compile {
         })
 
     }
+    compileEvent(node,attrName,funName){
+        const dir = attrName.substring(1)
+        this.bindEvent(node,dir,funName)
+    }
+    bindEvent(node,EventName,funName){
+        console.log(node)
+        console.log(this.$vm)
+        const handerEvent = this.$vm.$options.methods && this.$vm.$options.methods[funName]
+        console.log(handerEvent)
+        console.log(EventName)
+        if(handerEvent && EventName){
+            node.addEventListener(EventName,handerEvent.bind(this.$vm))
+        }
+        
+    }
+    compileAttr(node){
+        const nodeAttrs = node.attributes;
+        Array.from(nodeAttrs).forEach(attr=>{
+            const attrName = attr.name;//属性名
+            const exp = attr.value;//属性值
+            if(this.isDirective(attrName)){
+                const dir = attrName.split('-')[1]
+                this[dir] && this[dir](node,this.$vm,exp)
+            }
+            if(this.isEvent(attrName)){ 
+                this.compileEvent(node,attrName,exp)
+            }
+        })
+    }
+    isDirective(attrName){
+        return attrName.indexOf('k-') === 0
+    }
+    isEvent(attrName){
+        return attrName.indexOf('@') === 0
+    }
     compileText(node){
        this.update(node,this.$vm,RegExp.$1,'text')
+    }
+    text(node,vm,exp){
+        this.update(node,vm,RegExp.$1,'text')
     }
     textUpdater(node,value){
         node.textContent = value
