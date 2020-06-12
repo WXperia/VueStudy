@@ -2,7 +2,9 @@
 //Vue的响应式原理
 //Vue编译器
 //依赖收集
-let isObject = function (o) {
+//compile
+
+const isObject = function (o) {
   return Object.prototype.toString.call(o) === "[object Object]";
 };
 class miniVue {
@@ -11,12 +13,13 @@ class miniVue {
     //数距响应化
     this.$data = options.data;
     this.observe(this.$data);
+    callHook(this,'beforeCreate')
     // new Watcher(this,'test');
     // this.test
     // new Watcher(this,'fool.bar')
     // this.fool.bar
     new Compile(options.el,this);
-
+    callHook(this,'created')
   }
   observe(data) {
     if (!data || !isObject(data)) {
